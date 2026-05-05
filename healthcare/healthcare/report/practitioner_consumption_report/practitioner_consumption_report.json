@@ -1,0 +1,34 @@
+{
+ "add_total_row": 0,
+ "add_translate_data": 0,
+ "columns": [],
+ "creation": "2026-02-13 12:25:11.154211",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letterhead": null,
+ "modified": "2026-02-13 12:25:11.154211",
+ "modified_by": "Administrator",
+ "module": "Healthcare",
+ "name": "Practitioner Consumption Report",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Healthcare Practitioner",
+ "report_name": "Practitioner Consumption Report",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Laboratory User"
+  },
+  {
+   "role": "Physician"
+  },
+  {
+   "role": "Nursing User"
+  }
+ ],
+ "timeout": 0
+}

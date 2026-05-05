@@ -1,0 +1,112 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-08-19 00:08:36.677530",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "patient",
+  "frequency",
+  "start_date",
+  "column_break_jffp",
+  "package",
+  "net_amount",
+  "end_date",
+  "section_break_niwg",
+  "therapies_assigned",
+  "section_break_kkqo",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_kkqo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Therapy Package Enrollment",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "patient",
+   "fieldtype": "Link",
+   "label": "Patient",
+   "options": "Patient"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "column_break_jffp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "package",
+   "fieldtype": "Link",
+   "label": "Package",
+   "options": "Item"
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "frequency",
+   "fieldtype": "Link",
+   "label": "Frequency",
+   "options": "Frequency"
+  },
+  {
+   "fetch_from": "package.standard_rate",
+   "fieldname": "net_amount",
+   "fieldtype": "Currency",
+   "label": "Net Amount"
+  },
+  {
+   "fieldname": "section_break_niwg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "therapies_assigned",
+   "fieldtype": "Table",
+   "label": "Therapies Assigned",
+   "options": "Therapies Assigned"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-08-19 00:27:22.012500",
+ "modified_by": "Administrator",
+ "module": "Healthcare",
+ "name": "Therapy Package Enrollment",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

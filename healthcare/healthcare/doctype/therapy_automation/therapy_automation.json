@@ -1,0 +1,158 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2025-11-15 22:24:43.102937",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "therapy_plan",
+  "cost_center",
+  "column_break_epgw",
+  "therapy_session",
+  "section_break_lmis",
+  "patient",
+  "healthcare_practitioner",
+  "date",
+  "column_break_osdf",
+  "therapy_type",
+  "patrictioner_name",
+  "day",
+  "section_break_ejns",
+  "from_time",
+  "token_no",
+  "naming_series",
+  "column_break_kqvv",
+  "to_time",
+  "booked"
+ ],
+ "fields": [
+  {
+   "fieldname": "therapy_plan",
+   "fieldtype": "Link",
+   "label": "Therapy Plan",
+   "options": "Therapy Plan"
+  },
+  {
+   "fieldname": "column_break_epgw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "therapy_session",
+   "fieldtype": "Data",
+   "label": "Therapy Session",
+   "options": "Therapy Session"
+  },
+  {
+   "fieldname": "section_break_lmis",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "patient",
+   "fieldtype": "Link",
+   "label": "Patient",
+   "options": "Patient"
+  },
+  {
+   "fieldname": "healthcare_practitioner",
+   "fieldtype": "Link",
+   "label": "Healthcare Practitioner",
+   "options": "Healthcare Practitioner"
+  },
+  {
+   "fieldname": "from_time",
+   "fieldtype": "Time",
+   "label": "From Time"
+  },
+  {
+   "fieldname": "column_break_osdf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "therapy_type",
+   "fieldtype": "Link",
+   "label": "Therapy Type",
+   "options": "Therapy Type"
+  },
+  {
+   "fieldname": "to_time",
+   "fieldtype": "Time",
+   "label": "To Time"
+  },
+  {
+   "fetch_from": "healthcare_practitioner.first_name",
+   "fieldname": "patrictioner_name",
+   "fieldtype": "Data",
+   "label": "Patrictioner Name"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "day",
+   "fieldtype": "Data",
+   "label": "Day"
+  },
+  {
+   "fieldname": "section_break_ejns",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "token_no",
+   "fieldtype": "Data",
+   "label": "Token No"
+  },
+  {
+   "fieldname": "column_break_kqvv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "booked",
+   "fieldtype": "Check",
+   "label": "Booked"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "naming_series",
+   "options": "TA-"
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_calendar_and_gantt": 1,
+ "links": [],
+ "modified": "2025-12-09 17:31:48.332549",
+ "modified_by": "Administrator",
+ "module": "Healthcare",
+ "name": "Therapy Automation",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

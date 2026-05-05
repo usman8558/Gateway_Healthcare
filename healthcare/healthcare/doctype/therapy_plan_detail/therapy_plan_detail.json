@@ -1,0 +1,159 @@
+{
+ "actions": [],
+ "creation": "2020-03-29 20:52:57.068731",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "therapy_type",
+  "no_of_sessions",
+  "sessions_completed",
+  "service_request",
+  "date",
+  "slot_assign",
+  "frequency",
+  "column_break_bxcm",
+  "start_time",
+  "healthcare_practitioner",
+  "patrictioner_name",
+  "time_slots",
+  "day",
+  "end_time",
+  "section_break_hywn",
+  "patient_care_type",
+  "column_break_eawy",
+  "intent",
+  "priority"
+ ],
+ "fields": [
+  {
+   "fieldname": "therapy_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Therapy Type",
+   "options": "Therapy Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "no_of_sessions",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "No of Sessions"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.parenttype=='Therapy Plan';",
+   "fieldname": "sessions_completed",
+   "fieldtype": "Int",
+   "label": "Sessions Completed",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_hywn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "patient_care_type",
+   "fieldtype": "Link",
+   "label": "Patient Care Type",
+   "options": "Patient Care Type"
+  },
+  {
+   "fieldname": "column_break_eawy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "intent",
+   "fieldtype": "Link",
+   "label": "Intent",
+   "options": "Code Value"
+  },
+  {
+   "fieldname": "priority",
+   "fieldtype": "Link",
+   "label": "Priority",
+   "options": "Code Value"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "service_request",
+   "fieldtype": "Data",
+   "label": "Service Request",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_bxcm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "start_time",
+   "fieldtype": "Time",
+   "in_list_view": 1,
+   "label": "Start Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "healthcare_practitioner",
+   "fieldtype": "Link",
+   "label": "Healthcare Practitioner",
+   "options": "Healthcare Practitioner"
+  },
+  {
+   "fieldname": "time_slots",
+   "fieldtype": "Link",
+   "label": "Time Slots",
+   "options": "Healthcare Schedule Time Slot"
+  },
+  {
+   "fieldname": "day",
+   "fieldtype": "Data",
+   "label": "Day",
+   "read_only": 1
+  },
+  {
+   "fieldname": "end_time",
+   "fieldtype": "Time",
+   "label": "End Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fetch_from": "healthcare_practitioner.practitioner_name",
+   "fieldname": "patrictioner_name",
+   "fieldtype": "Data",
+   "label": "Patrictioner Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "slot_assign",
+   "fieldtype": "Button",
+   "label": "Slot Assign"
+  },
+  {
+   "fieldname": "frequency",
+   "fieldtype": "Select",
+   "label": "Frequency",
+   "options": "\nDaily\nAlternate Days\nWeekly"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2025-11-12 17:44:32.037411",
+ "modified_by": "Administrator",
+ "module": "Healthcare",
+ "name": "Therapy Plan Detail",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

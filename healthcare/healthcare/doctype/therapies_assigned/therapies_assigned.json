@@ -1,0 +1,56 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-08-19 00:15:27.910943",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "therapy",
+  "assign_therapist",
+  "session_per_week",
+  "total_sessions"
+ ],
+ "fields": [
+  {
+   "fieldname": "therapy",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Therapy",
+   "options": "Healthcare Service Unit"
+  },
+  {
+   "fieldname": "assign_therapist",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Assign Therapist",
+   "options": "Healthcare Practitioner"
+  },
+  {
+   "fieldname": "session_per_week",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Session per Week"
+  },
+  {
+   "fieldname": "total_sessions",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Total Sessions"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-08-19 00:27:11.425660",
+ "modified_by": "Administrator",
+ "module": "Healthcare",
+ "name": "Therapies Assigned",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
