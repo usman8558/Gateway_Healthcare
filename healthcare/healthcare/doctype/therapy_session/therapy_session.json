@@ -24,6 +24,7 @@
   "therapy_plan_template",
   "status",
   "therapy_automation",
+  "therapy_plan_detail",
   "details_section",
   "duration",
   "rate",
@@ -303,6 +304,15 @@
    "fieldtype": "Link",
    "label": "Therapy Automation",
    "options": "Therapy Automation"
+  },
+  {
+   "allow_on_submit": 1,
+   "description": "Row name of the Therapy Plan Detail row this session belongs to",
+   "fieldname": "therapy_plan_detail",
+   "fieldtype": "Data",
+   "label": "Therapy Plan Detail Row",
+   "no_copy": 1,
+   "read_only": 1
   }
  ],
  "is_submittable": 1,

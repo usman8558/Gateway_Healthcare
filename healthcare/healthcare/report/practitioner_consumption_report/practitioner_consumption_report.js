@@ -1,12 +1,43 @@
 frappe.query_reports["Practitioner Consumption Report"] = {
     filters: [
         {
+            fieldname: "view",
+            label: __("View"),
+            fieldtype: "Select",
+            options: "Monthly\nQuarterly\nYearly",
+            default: "Monthly",
+            reqd: 1,
+            on_change: function() {
+                // Dynamically Hide/Show dependent filters
+                let view = frappe.query_report.get_filter_value('view');
+                if (view === 'Monthly') {
+                    frappe.query_report.toggle_filter_display('month', false);
+                    frappe.query_report.toggle_filter_display('quarter', true);
+                } else if (view === 'Quarterly') {
+                    frappe.query_report.toggle_filter_display('month', true);
+                    frappe.query_report.toggle_filter_display('quarter', false);
+                } else {
+                    // Yearly
+                    frappe.query_report.toggle_filter_display('month', true);
+                    frappe.query_report.toggle_filter_display('quarter', true);
+                }
+                frappe.query_report.refresh();
+            }
+        },
+        {
             fieldname: "month",
             label: __("Month"),
             fieldtype: "Select",
             options: "January\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember",
-            default: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][frappe.datetime.str_to_obj(frappe.datetime.nowdate()).getMonth()],
-            reqd: 1
+            default: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][frappe.datetime.str_to_obj(frappe.datetime.nowdate()).getMonth()]
+        },
+        {
+            fieldname: "quarter",
+            label: __("Quarter"),
+            fieldtype: "Select",
+            options: "Q1\nQ2\nQ3\nQ4",
+            default: "Q1",
+            hidden: 1
         },
         {
             fieldname: "year",
@@ -17,71 +48,51 @@ frappe.query_reports["Practitioner Consumption Report"] = {
             reqd: 1
         }
     ],
-    treeview: true,
-    name_field: "practitioner",
     
+    onload: function(report) {
+        // Ensure filters are correctly displayed when the report first loads
+        let view = report.get_filter_value('view');
+        if (view === 'Monthly') {
+            report.toggle_filter_display('quarter', true);
+        }
+    },
+
     formatter: function(value, row, column, data, default_formatter) {
-        // ... (Aapka purana formatter ka code yahan aayega) ...
-        // Default formatter se commas waghera lag jayenge
         value = default_formatter(value, row, column, data);
-        
-        // 🔥 NAYA SAFE PARSING: Commas ka masla khatam karne ke liye hum raw data use karenge
-        let raw_value = data ? flt(data[column.fieldname]) : 0;
 
-        // --- 1. UNIVERSAL BOLD ---
-        if (data && (data.indent === 0 || data.bold)) {
-            if (typeof value === "string" && !value.includes("<strong>")) {
-                value = `<strong>${value}</strong>`;
-            }
+        if (!data) return value;
+
+        // Apply % formatting to Capacity Used
+        if (column.fieldname === "capacity_used") {
+            let bold_format = data.capacity_used > 100 ? "font-weight: bold; color: #dc3545;" : "font-weight: 500;";
+            return `<span style="${bold_format}">${data.capacity_used}%</span>`;
         }
 
-        // --- 2. CAPACITY TABLE TITLE ROW ---
-        if (data && data.practitioner === "CAPACITY AND REVENUE TABLE") {
-            column.custom_style = {
-                "background-color": "#e3f2fd", 
-                "color": "#0d47a1",            
-                "font-weight": "bold",
-                "font-size": "13px"
-            };
-        }
+        // Apply Beautiful UI Badges for Status
+        if (column.fieldname === "status") {
+            let status = data.status;
+            let bg_color = "#6c757d"; // Default Gray
+            let text_color = "#ffffff";
 
-        // --- 3. HEADER ROW INJECTION ---
-        if (data && data.is_header) {
-            column.custom_style = {"background-color": "#f8f9fa", "font-weight": "bold", "color": "#1a1a1a"};
-            if (column.fieldname === "practitioner") return `<strong>Metric</strong>`;
-            else if (data[column.fieldname]) return `<strong>${data[column.fieldname]}</strong>`; 
-            return "";
-        }
-
-        // --- 4. CAPACITY TABLE DATA ROWS ---
-        if (data && data.is_capacity_row) {
+            if (status === "Excellent") { bg_color = "#28a745"; } // Green
+            else if (status === "Good") { bg_color = "#007bff"; } // Blue
+            else if (status === "Moderate") { bg_color = "#fd7e14"; } // Orange
+            else if (status === "Overloaded") { bg_color = "#dc3545"; } // Red
             
-            // Utilization % formatting (raw_value use kiya)
-            if (data.practitioner === "Utilization %" && column.fieldtype === "Float") {
-                return `${raw_value.toFixed(2)}%`;
-            }
-
-            // Total Revenue Formatting (raw_value use kiya)
-            if (data.practitioner === "Total Revenue" && column.fieldtype === "Float") {
-                if (raw_value === 0) return ""; // Ab sirf tab blank hoga jab database se sach mein 0 aaye
-                return `<span style="color:#28a745;"> ${format_currency(raw_value)}</span>`;
-            }
-        }
-
-        // --- 5. ACTUAL CONSUMPTION BADGES ---
-        if (data && data.practitioner === "Actual Consumption") {
-            const target_cols = ["consumption", "rem_100", "rem_60"];
-            
-            if (target_cols.includes(column.fieldname)) {
-                let badge_color = "#28a745"; 
-                if (column.fieldname === "consumption") {
-                    if (raw_value < 60) badge_color = "#dc3545"; 
-                } else {
-                    if (raw_value < 0) badge_color = "#007bff"; 
-                }
-                value = `<div style="background-color: ${badge_color}; color: white; padding: 4px 12px; border-radius: 15px; font-weight: bold; display: inline-block; min-width: 75px; text-align: center; font-size: 11px;">${value}</div>`;
-            }
-            column.custom_style = {"background-color": "#f0fdf4", "color": "#166534", "font-weight": "bold"};
+            return `<div style="
+                background-color: ${bg_color}; 
+                color: ${text_color}; 
+                padding: 4px 12px; 
+                border-radius: 12px; 
+                font-weight: 600; 
+                font-size: 11px; 
+                text-align: center; 
+                display: inline-block; 
+                min-width: 85px; 
+                box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+                letter-spacing: 0.5px;">
+                ${status.toUpperCase()}
+            </div>`;
         }
 
         return value;

@@ -21,6 +21,7 @@
   "end_time",
   "section_break_hywn",
   "patient_care_type",
+  "status",
   "column_break_eawy",
   "intent",
   "priority"
@@ -140,11 +141,18 @@
    "fieldtype": "Select",
    "label": "Frequency",
    "options": "\nDaily\nAlternate Days\nWeekly"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "\nCompleted\nRemaining"
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2025-11-12 17:44:32.037411",
+ "modified": "2026-07-15 12:45:29.978201",
  "modified_by": "Administrator",
  "module": "Healthcare",
  "name": "Therapy Plan Detail",

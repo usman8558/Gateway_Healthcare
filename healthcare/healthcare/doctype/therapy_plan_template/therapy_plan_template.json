@@ -16,6 +16,7 @@
   "column_break_6",
   "description",
   "days_per_week",
+  "frequency",
   "therapy_types_section",
   "therapy_types",
   "section_break_11",
@@ -124,11 +125,17 @@
    "fieldtype": "Select",
    "label": "Days Per Week",
    "options": "\n3\n4\n5"
+  },
+  {
+   "fieldname": "frequency",
+   "fieldtype": "Select",
+   "label": "Frequency",
+   "options": "\nDaily\nAlternate Days\nWeekly"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-01 12:42:02.373471",
+ "modified": "2026-07-01 13:01:50.232672",
  "modified_by": "Administrator",
  "module": "Healthcare",
  "name": "Therapy Plan Template",

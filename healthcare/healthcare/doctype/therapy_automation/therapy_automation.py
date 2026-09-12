@@ -17,7 +17,7 @@ def create_previous_sessions():
                 ["date", "<", today_date],
                 ["therapy_session", "=", ""]  # Only get records without sessions
             ],
-            fields=["name", "date", "therapy_plan", "patient", "therapy_type",
+            fields=["name", "date", "therapy_plan", "therapy_plan_detail", "patient", "therapy_type",
                     "healthcare_practitioner", "from_time", "to_time", "therapy_session"]
         )
 
@@ -37,6 +37,7 @@ def create_previous_sessions():
                 # Create therapy session with the date from therapy automation
                 session = frappe.new_doc("Therapy Session")
                 session.therapy_plan = r.therapy_plan
+                session.therapy_plan_detail = r.therapy_plan_detail
                 session.patient = r.patient
                 session.therapy_type = r.therapy_type
                 session.practitioner = r.healthcare_practitioner
@@ -96,8 +97,8 @@ def create_today_sessions():
         records = frappe.get_all(
             "Therapy Automation",
             filters={"date": today_date},
-            fields=["name", "therapy_plan", "patient", "therapy_type",
-                    "healthcare_practitioner", "from_time", "to_time", "therapy_session","name"]
+            fields=["name", "therapy_plan", "therapy_plan_detail", "patient", "therapy_type",
+                    "healthcare_practitioner", "from_time", "to_time", "therapy_session"]
         )
 
         if not records:
@@ -124,6 +125,7 @@ def create_today_sessions():
             # Create therapy session
             session = frappe.new_doc("Therapy Session")
             session.therapy_plan = r.therapy_plan
+            session.therapy_plan_detail = r.therapy_plan_detail
             session.patient = r.patient
             session.therapy_type = r.therapy_type
             session.practitioner = r.healthcare_practitioner

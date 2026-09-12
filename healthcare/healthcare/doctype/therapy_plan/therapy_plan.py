@@ -21,7 +21,13 @@ class TherapyPlan(Document):
     def release_sessions(self):
         # ? Check sessions and release booked slots if completed
         for row in self.therapy_plan_details:
-            if (row.no_of_sessions == row.sessions_completed):
+            # Without these guards a row with no practitioner (or an empty 0/0 row)
+            # raises on every save, which rolls back the sessions_completed update
+            # that triggered the save in the first place.
+            if not row.healthcare_practitioner:
+                continue
+
+            if row.no_of_sessions and row.no_of_sessions == row.sessions_completed:
                 # Fetch practitioner doc
                 practitioner = frappe.get_doc("Healthcare Practitioner", row.healthcare_practitioner)
 

@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "therapy_plan",
+  "therapy_plan_detail",
   "cost_center",
   "column_break_epgw",
   "therapy_session",
@@ -32,6 +33,14 @@
    "fieldtype": "Link",
    "label": "Therapy Plan",
    "options": "Therapy Plan"
+  },
+  {
+   "description": "Row name of the Therapy Plan Detail row this slot was scheduled from",
+   "fieldname": "therapy_plan_detail",
+   "fieldtype": "Data",
+   "label": "Therapy Plan Detail Row",
+   "no_copy": 1,
+   "read_only": 1
   },
   {
    "fieldname": "column_break_epgw",

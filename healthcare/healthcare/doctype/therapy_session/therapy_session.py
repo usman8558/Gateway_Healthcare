@@ -139,6 +139,8 @@ def create_rescheduled_session(old_session, practitioner, appointment_date, day,
     new_doc.from_time = from_time
     new_doc.to_time = to_time
     new_doc.token_no = token_no
+    # no_copy field, so copy_doc drops it - carry it over explicitly
+    new_doc.therapy_plan_detail = old_doc.therapy_plan_detail
 
     new_doc.save(ignore_permissions=True)
 
@@ -148,6 +150,7 @@ def create_rescheduled_session(old_session, practitioner, appointment_date, day,
     new_ta = frappe.get_doc({
         "doctype": "Therapy Automation",
         "therapy_plan": old_doc.therapy_plan,
+        "therapy_plan_detail": old_doc.therapy_plan_detail,
         "patient": old_doc.patient,
         "therapy_type": old_doc.therapy_type,
         "healthcare_practitioner": practitioner,
@@ -350,14 +353,53 @@ class TherapySession(Document):
             )
 
     def update_sessions_count_in_therapy_plan(self, on_cancel=False):
+        """Increment/decrement sessions_completed on the ONE plan row this session belongs to.
+
+        A plan can legitimately hold several rows with the same therapy_type and
+        practitioner. Matching on those fields alone touches every one of them, so
+        each row ends up with the total for the whole group. `therapy_plan_detail`
+        carries the exact child row name from Therapy Automation, which is what we
+        match on. The therapy_type fallback below only covers legacy records created
+        before that field existed.
+        """
+        if not self.therapy_plan:
+            return
+
         therapy_plan = frappe.get_doc("Therapy Plan", self.therapy_plan)
-        for entry in therapy_plan.therapy_plan_details:
-            if entry.therapy_type == self.therapy_type:
+        target = None
+
+        if self.therapy_plan_detail:
+            for entry in therapy_plan.therapy_plan_details:
+                if entry.name == self.therapy_plan_detail:
+                    target = entry
+                    break
+
+        if not target:
+            # Legacy fallback: first matching row that still has room, so duplicate
+            # rows fill in order instead of all being incremented together.
+            for entry in therapy_plan.therapy_plan_details:
+                if entry.therapy_type != self.therapy_type:
+                    continue
+                if (
+                    entry.healthcare_practitioner
+                    and self.practitioner
+                    and entry.healthcare_practitioner != self.practitioner
+                ):
+                    continue
+
                 if on_cancel:
-                    entry.sessions_completed -= 1
-                else:
-                    entry.sessions_completed += 1
-        therapy_plan.save()
+                    if (entry.sessions_completed or 0) > 0:
+                        target = entry
+                        break
+                elif (entry.sessions_completed or 0) < (entry.no_of_sessions or 0):
+                    target = entry
+                    break
+
+        if not target:
+            return
+
+        target.sessions_completed = (target.sessions_completed or 0) + (-1 if on_cancel else 1)
+        therapy_plan.save(ignore_permissions=True)
 
     def set_total_counts(self):
         target_total = 0

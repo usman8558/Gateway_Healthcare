@@ -21,6 +21,7 @@
   "mobile_phone",
   "residence_phone",
   "office_phone",
+  "leave_date",
   "employee_and_user_details_section",
   "practitioner_type",
   "type",
@@ -369,11 +370,16 @@
    "fieldtype": "Select",
    "label": "Type",
    "options": "Consultant\nTherapist\nBoth"
+  },
+  {
+   "fieldname": "leave_date",
+   "fieldtype": "Date",
+   "label": "Leave Date"
   }
  ],
  "image_field": "image",
  "links": [],
- "modified": "2026-02-13 12:09:40.893854",
+ "modified": "2026-08-05 02:44:37.579512",
  "modified_by": "Administrator",
  "module": "Healthcare",
  "name": "Healthcare Practitioner",
