@@ -1,0 +1,34 @@
+{
+ "add_total_row": 0,
+ "add_translate_data": 0,
+ "columns": [],
+ "creation": "2026-09-24 00:00:00.000000",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letterhead": null,
+ "modified": "2026-09-24 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Healthcare",
+ "name": "Patients by Practitioner",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Therapy Session",
+ "report_name": "Patients by Practitioner",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "Healthcare Administrator"
+  },
+  {
+   "role": "Physician"
+  }
+ ],
+ "timeout": 0
+}

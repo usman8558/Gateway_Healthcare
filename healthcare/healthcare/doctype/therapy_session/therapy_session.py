@@ -210,6 +210,17 @@ class TherapySession(Document):
 
         self.update_sessions_count_in_therapy_plan(on_cancel=True)
 
+    def on_trash(self):
+        self.delete_events()
+
+    def delete_events(self):
+        """Delete Events created for this session; Event's on_trash hook removes them from Google Calendar"""
+        if not frappe.db.has_column("Event", "therapy_session"):
+            return
+
+        for event in frappe.get_all("Event", filters={"therapy_session": self.name}, pluck="name"):
+            frappe.delete_doc("Event", event, ignore_permissions=True)
+
     def validate_duplicate(self):
       # Convert start_date string to date object
       start_date_obj = getdate(self.start_date)
@@ -283,7 +294,8 @@ class TherapySession(Document):
                   "starts_on": starts_on_dt,
                   "ends_on": ends_on_dt,
                   "google_calendar": self.doctor_name,
-                  "google_calendar_id":"19f2e10d8709e15b209f0e4e6ec67ac781bc2714e3c0ffeb1571d3f31a3cf28e@group.calendar.google.com"
+                  "google_calendar_id":"19f2e10d8709e15b209f0e4e6ec67ac781bc2714e3c0ffeb1571d3f31a3cf28e@group.calendar.google.com",
+                  "therapy_session": self.name,
               })
               event.insert(ignore_permissions=True)
 
@@ -296,7 +308,6 @@ class TherapySession(Document):
                 if ta.booked:  # only update if it's checked
                     ta.booked = 0
                     ta.save(ignore_permissions=True)
-                    frappe.db.commit()
 
                     frappe.logger().info(
                         f"Therapy Automation {ta.name}: booked unchecked because session {self.name} completed"
@@ -496,71 +507,93 @@ def get_session_details(session_name):
     }
 
 
+@frappe.whitelist()
+def get_sessions_with_progress_note(sessions):
+    """Return which of the given Therapy Sessions already have a Progress Note (for the list view icons)"""
+    frappe.has_permission("Therapy Session", "read", throw=True)
+    sessions = frappe.parse_json(sessions)
+    if not sessions:
+        return []
+
+    return frappe.get_all(
+        "Progress Notes", filters={"therapy_session": ["in", sessions]}, pluck="therapy_session", distinct=True
+    )
+
+
 
 @frappe.whitelist()
 def create_progress_note(therapy_session, patient_name, diagnosis, age, table_rows):
-    try:
-        # Validate required fields
-        if not diagnosis:
-            frappe.throw("Diagnosis is required")
-        if not age:
-            frappe.throw("Age is required")
+    """Create a Progress Note and submit its Therapy Session as one transaction.
 
-        # Parse table_rows if it's a JSON string
-        if isinstance(table_rows, str):
-            import json
-            try:
-                table_rows = json.loads(table_rows)
-            except json.JSONDecodeError:
-                frappe.throw("Invalid progress notes data")
+    Errors are raised, not swallowed, so the request is rolled back as a whole:
+    either the note is created and the session submitted, or nothing is saved.
+    """
+    if not diagnosis:
+        frappe.throw(_("Diagnosis is required"))
 
-        # Create Progress Note
-        doc = frappe.new_doc("Progress Notes")
-        doc.therapy_session = therapy_session
-        doc.patient_name = patient_name
-        doc.diagnosis = diagnosis
-        doc.age = age
+    # Parse table_rows if it's a JSON string
+    if isinstance(table_rows, str):
+        import json
+        try:
+            table_rows = json.loads(table_rows)
+        except json.JSONDecodeError:
+            frappe.throw(_("Invalid progress notes data"))
 
-        # Insert child table rows
-        if table_rows:
-            for row in table_rows:
-                child = doc.append("progress_notes_ct", {})
-                child.date = row.get("date")
-                child.target = row.get("target")
-                child.activities = row.get("activities")
-                child.behavior_observation = row.get("behavior_observation")
-                child.user = row.get("user")
+    # Lock the session row so parallel requests for the same session (e.g. a double
+    # tap on Save) run one after the other and the check below sees the first note
+    if not frappe.db.get_value("Therapy Session", therapy_session, "name", for_update=True):
+        frappe.throw(_("Therapy Session {0} not found").format(therapy_session))
 
-        doc.insert(ignore_permissions=True)
-        doc.submit()
+    # Locking read: sees notes committed by a request that held the lock before us
+    existing_note = frappe.db.get_value(
+        "Progress Notes", {"therapy_session": therapy_session}, "name", for_update=True
+    )
+    if existing_note:
+        frappe.throw(
+            _("Progress Note {0} already exists for Therapy Session {1}").format(
+                get_link_to_form("Progress Notes", existing_note), therapy_session
+            ),
+            title=_("Duplicate Progress Note"),
+        )
 
-        # Submit the Therapy Session
-        therapy_submitted = False
-        therapy_message = ""
-        
-        therapy_doc = frappe.get_doc("Therapy Session", therapy_session)
-        if therapy_doc.docstatus == 0:  # Draft state
-            try:
-                therapy_doc.status="Completed"
-                therapy_doc.submit()
-                therapy_submitted = True
-                therapy_message = "Progress Note created and Therapy Session submitted successfully!"
-            except Exception as e:
-                therapy_message = f"Progress Note created but Therapy Session submission failed: {str(e)}"
-        elif therapy_doc.docstatus == 1:  # Already submitted
-            therapy_message = "Progress Note created successfully! (Therapy Session was already submitted)"
-        else:  # Cancelled
-            therapy_message = "Progress Note created! (Therapy Session is cancelled and cannot be submitted)"
+    # Create Progress Note
+    doc = frappe.new_doc("Progress Notes")
+    doc.therapy_session = therapy_session
+    doc.patient_name = patient_name
+    doc.diagnosis = diagnosis
+    doc.age = age
 
-        return {
-            "progress_note": doc.name,
-            "therapy_session_submitted": therapy_submitted,
-            "message": therapy_message
-        }
+    # Insert child table rows
+    if table_rows:
+        for row in table_rows:
+            child = doc.append("progress_notes_ct", {})
+            child.date = row.get("date")
+            child.target = row.get("target")
+            child.activities = row.get("activities")
+            child.behavior_observation = row.get("behavior_observation")
+            child.user = row.get("user")
 
-    except Exception as e:
-        frappe.log_error(f"Error in create_progress_note: {str(e)}")
-        frappe.throw("Failed to create progress note. Please try again.")
+    doc.insert(ignore_permissions=True)
+    doc.submit()
+
+    # Submit the Therapy Session; any failure propagates and rolls back the note too
+    therapy_submitted = False
+    therapy_doc = frappe.get_doc("Therapy Session", therapy_session)
+    if therapy_doc.docstatus == 0:  # Draft state
+        therapy_doc.status = "Completed"
+        therapy_doc.submit()
+        therapy_submitted = True
+        therapy_message = _("Progress Note created and Therapy Session submitted successfully!")
+    elif therapy_doc.docstatus == 1:  # Already submitted
+        therapy_message = _("Progress Note created successfully! (Therapy Session was already submitted)")
+    else:  # Cancelled
+        therapy_message = _("Progress Note created! (Therapy Session is cancelled and cannot be submitted)")
+
+    return {
+        "progress_note": doc.name,
+        "therapy_session_submitted": therapy_submitted,
+        "message": therapy_message
+    }
 
 
 

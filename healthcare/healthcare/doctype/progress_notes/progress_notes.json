@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "naming_series:",
  "creation": "2025-11-11 14:12:51.673755",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -8,9 +9,11 @@
   "patient_name",
   "diagnosis",
   "age",
+  "user",
   "progress_notes_ct",
   "remarks",
-  "therapy_session"
+  "therapy_session",
+  "naming_series"
  ],
  "fields": [
   {
@@ -46,15 +49,28 @@
    "fieldtype": "Table",
    "label": "Progress Notes CT",
    "options": "Progress Notes CT"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "PM-."
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-21 11:48:13.137157",
+ "modified": "2026-09-24 14:31:31.060974",
  "modified_by": "Administrator",
  "module": "Healthcare",
  "name": "Progress Notes",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
