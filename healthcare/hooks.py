@@ -10,6 +10,58 @@ app_email = "info@earthianslive.com"
 app_license = "GNU GPL V3"
 required_apps = ["erpnext"]
 
+# --- Site customization fixtures (local fork addition, not upstream) ---
+# Standard records (DocTypes, standard Reports / Print Formats / Web Forms, Workspaces)
+# are already versioned as files in the module. These fixtures carry the DB-only
+# customizations made on top of the Healthcare module's DocTypes.
+HEALTHCARE_DOCTYPES = [
+    "ABDM Request", "ABDM Settings", "Antibiotic", "Appointment Type",
+    "Appointment Type Service Item", "Body Part", "Body Part Link", "Clinical Note",
+    "Clinical Note Type", "Clinical Procedure", "Clinical Procedure Item",
+    "Clinical Procedure Template", "Code System", "Code Value", "Code Value Set",
+    "Codification Table", "Complaint", "Descriptive Test Result", "Descriptive Test Template",
+    "Diagnosis", "Diagnostic Report", "Dosage Form", "Dosage Strength", "Drug Prescription",
+    "Exercise", "Exercise Difficulty Level", "Exercise Type", "Exercise Type Step",
+    "Fee Validity", "Fee Validity Reference", "Frequency", "Healthcare Activity",
+    "Healthcare Practitioner", "Healthcare Schedule Time Slot", "Healthcare Service Unit",
+    "Healthcare Service Unit Type", "Healthcare Settings", "Inpatient Medication Entry",
+    "Inpatient Medication Entry Detail", "Inpatient Medication Order",
+    "Inpatient Medication Order Entry", "Inpatient Occupancy", "Inpatient Record",
+    "Lab Prescription", "Lab Test", "Lab Test Group Template", "Lab Test Sample",
+    "Lab Test Template", "Lab Test UOM", "Medical Department", "Medication",
+    "Medication Class", "Medication Ingredient", "Medication Linked Item",
+    "Medication Request", "Normal Test Result", "Normal Test Template",
+    "Nursing Checklist Template", "Nursing Checklist Template Task", "Nursing Task",
+    "Observation", "Observation Component", "Observation Reference Range",
+    "Observation Sample Collection", "Observation Template", "Organism", "Organism Test Item",
+    "Organism Test Result", "Patient", "Patient Appointment", "Patient Assessment",
+    "Patient Assessment Detail", "Patient Assessment Parameter", "Patient Assessment Sheet",
+    "Patient Assessment Template", "Patient Care Type", "Patient Encounter",
+    "Patient Encounter Diagnosis", "Patient Encounter Symptom",
+    "Patient History Custom Document Type", "Patient History Settings",
+    "Patient History Standard Document Type", "Patient Medical Record", "Patient Relation",
+    "Practitioner Schedule", "Practitioner Service Unit Schedule", "Prescription Dosage",
+    "Prescription Duration", "Procedure Prescription", "Progress Notes", "Progress Notes CT",
+    "Sample Collection", "Sample Type", "Sensitivity", "Sensitivity Test Result",
+    "Service Request", "Service Request Category", "Service Request Reason", "Specimen",
+    "Therapies Assigned", "Therapy Automation", "Therapy Package Enrollment", "Therapy Plan",
+    "Therapy Plan Detail", "Therapy Plan Template", "Therapy Plan Template Detail",
+    "Therapy Session", "Therapy Type", "Token No", "Treatment Plan Template",
+    "Treatment Plan Template Item", "Treatment Plan Template Practitioner", "Vital Signs",
+    "voucher",
+]
+
+fixtures = [
+    {"doctype": "Custom Field", "filters": [["dt", "in", HEALTHCARE_DOCTYPES]]},
+    {"doctype": "Property Setter", "filters": [["doc_type", "in", HEALTHCARE_DOCTYPES]]},
+    {"doctype": "Client Script", "filters": [["dt", "in", HEALTHCARE_DOCTYPES]]},
+    {"doctype": "Server Script", "filters": [["reference_doctype", "in", HEALTHCARE_DOCTYPES]]},
+    {"doctype": "Print Format", "filters": [["standard", "=", "No"], ["doc_type", "in", HEALTHCARE_DOCTYPES]]},
+    {"doctype": "Report", "filters": [["is_standard", "=", "No"], ["ref_doctype", "in", HEALTHCARE_DOCTYPES]]},
+    {"doctype": "Web Form", "filters": [["is_standard", "=", 0], ["doc_type", "in", HEALTHCARE_DOCTYPES]]},
+    {"doctype": "Custom DocPerm", "filters": [["parent", "in", HEALTHCARE_DOCTYPES]]},
+]
+
 # Includes in <head>
 # ------------------
 

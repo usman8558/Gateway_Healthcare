@@ -1,0 +1,84 @@
+[
+ {
+  "add_total_row": 0,
+  "add_translate_data": 0,
+  "columns": [],
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Report",
+  "filters": [],
+  "is_standard": "No",
+  "javascript": null,
+  "json": null,
+  "letter_head": null,
+  "modified": "2025-09-05 13:19:17.739897",
+  "module": "HRM",
+  "name": "Therapy Session",
+  "prepared_report": 0,
+  "query": "SELECT \n    start_date AS \"Date\",\n    patient AS \"Child Name\",\n    therapy_type AS \"Therapy\",\n    doctor_name AS \"Therapist\",\n    CONCAT(\n    TIME_FORMAT(from_time, '%%H:%%i'),\n        ' - ',\n        TIME_FORMAT(to_time, '%%H:%%i')\n    ) AS \"Time\",\n    status AS \"Status\"\nFROM \n    `tabTherapy Session`",
+  "ref_doctype": "Therapy Session",
+  "reference_report": null,
+  "report_name": "Therapy Session",
+  "report_script": null,
+  "report_type": "Query Report",
+  "roles": [
+   {
+    "parent": "Therapy Session",
+    "parentfield": "roles",
+    "parenttype": "Report",
+    "role": "System Manager"
+   },
+   {
+    "parent": "Therapy Session",
+    "parentfield": "roles",
+    "parenttype": "Report",
+    "role": "Physician"
+   }
+  ],
+  "timeout": 0
+ },
+ {
+  "add_total_row": 0,
+  "add_translate_data": 0,
+  "columns": [],
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Report",
+  "filters": [],
+  "is_standard": "No",
+  "javascript": null,
+  "json": "{\"filters\":[[\"Therapy Plan\",\"posting_date\",\"Between\",[\"2026-01-01\",\"2026-01-31\"],false],[\"Therapy Plan\",\"company\",\"=\",\"The Gateway\"]],\"fields\":[[\"name\",\"Therapy Plan\"],[\"patient\",\"Therapy Plan\"],[\"start_date\",\"Therapy Plan\"],[\"end_date\",\"Therapy Plan\"],[\"patient_name\",\"Therapy Plan\"],[\"posting_date\",\"Therapy Plan\"],[\"discount_amount\",\"Therapy Plan\"],[\"discount_percentage\",\"Therapy Plan\"],[\"discount_type\",\"Therapy Plan\"],[\"sales_invoice\",\"Therapy Plan\"],[\"itemamount\",\"Therapy Plan\"],[\"therapy_plan_template\",\"Therapy Plan\"],[\"total_sessions\",\"Therapy Plan\"],[\"total_sessions_completed\",\"Therapy Plan\"],[\"healthcare_practitioner\",\"Therapy Plan Detail\"],[\"patrictioner_name\",\"Therapy Plan Detail\"],[\"therapy_type\",\"Therapy Plan Detail\"],[\"no_of_sessions\",\"Therapy Plan Detail\"],[\"sessions_completed\",\"Therapy Plan Detail\"]],\"order_by\":\"`tabTherapy Plan`.`modified` desc\",\"add_totals_row\":0,\"page_length\":20,\"column_widths\":{\"name\":120,\"patient\":120,\"start_date\":120,\"end_date\":120,\"patient_name\":120,\"posting_date\":120,\"discount_amount\":120,\"discount_percentage\":120,\"discount_type\":120,\"sales_invoice\":120,\"itemamount\":120,\"therapy_plan_template\":120,\"total_sessions\":120,\"total_sessions_completed\":120,\"Therapy Plan Detail:healthcare_practitioner\":120,\"Therapy Plan Detail:patrictioner_name\":120,\"Therapy Plan Detail:therapy_type\":120,\"Therapy Plan Detail:no_of_sessions\":120,\"Therapy Plan Detail:sessions_completed\":120},\"group_by\":null}",
+  "letter_head": null,
+  "modified": "2026-07-10 13:28:02.248914",
+  "module": "Healthcare",
+  "name": "Therapy Plan Report",
+  "prepared_report": 0,
+  "query": null,
+  "ref_doctype": "Therapy Plan",
+  "reference_report": null,
+  "report_name": "Therapy Plan Report",
+  "report_script": null,
+  "report_type": "Report Builder",
+  "roles": [
+   {
+    "parent": "Therapy Plan Report",
+    "parentfield": "roles",
+    "parenttype": "Report",
+    "role": "System Manager"
+   },
+   {
+    "parent": "Therapy Plan Report",
+    "parentfield": "roles",
+    "parenttype": "Report",
+    "role": "Healthcare Administrator"
+   },
+   {
+    "parent": "Therapy Plan Report",
+    "parentfield": "roles",
+    "parenttype": "Report",
+    "role": "Physician"
+   }
+  ],
+  "timeout": 0
+ }
+]
